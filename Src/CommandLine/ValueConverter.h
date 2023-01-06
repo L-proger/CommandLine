@@ -2,6 +2,7 @@
 
 #include <type_traits>
 #include <string>
+#include "CommandLineException.h"
 
 namespace CommandLine {
     template<typename T>
@@ -11,19 +12,19 @@ namespace CommandLine {
             if constexpr (std::is_integral_v<T> && std::is_signed_v<T>) {
                 auto result = std::strtoll(value.c_str(), nullptr, 0);
                 if ((result < (std::numeric_limits<T>::min)()) || (result > (std::numeric_limits<T>::max)())) {
-                    throw ParserException("Value is out of range");
+                    throw CommandLine::Exception("Value is out of range");
                 }
                 return static_cast<T>(result);
             }
             else  if constexpr (std::is_integral_v<T> && !std::is_signed_v<T>) {
                 auto result = std::strtoull(value.c_str(), nullptr, 0);
                 if ((result < (std::numeric_limits<T>::min)()) || (result > (std::numeric_limits<T>::max)())) {
-                    throw ParserException("Value is out of range");
+                    throw CommandLine::Exception("Value is out of range");
                 }
                 return static_cast<T>(result);
             }
             else {
-                throw ParserException("ValueConverter: converter not found for type T");
+                throw CommandLine::Exception("ValueConverter: converter not found for type T");
             }
             
         }
